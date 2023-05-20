@@ -1,0 +1,24 @@
+fname	ASD DIAGN	PAIR
+P301	2	1
+P304	2	2
+P307	2	3
+P312	2	4
+P313	2	6
+P314	2	7
+P316	2	8 #no risk trialsafter  averaging?
+P320	2	9
+P321	2	10
+P322	2	11
+P323	2	12 
+P324	2	13
+P325	2	14
+P326	2	15
+P327	2	16
+P328	2	17 
+P329	2	18
+P333	2	19
+P334	2	20 
+P335	2	21
+P338	2	22
+P341	2	23
+#P342	2	24 #no data in the table

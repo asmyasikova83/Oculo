@@ -1,0 +1,24 @@
+fname	ASD DIAGN	PAIR
+P001	1	1
+P004	1	2
+P019	1	3
+P021	1	4
+P022	1	6
+P032	1	7
+P034	1	8 
+P035	1	9
+P039	1	10
+P040	1	11 
+Ð044	1	12 #no risk, norisk trials trained beforetrial aver, beforetrainingnoneof risks
+P047	1	13
+P048	1	14
+P053	1	15
+P055	1	16
+P058	1	17 #no risk trials trained before  trial aver, we have risks before train
+P059	1	18 
+P060	1	19
+P061	1	20 #no risk trials trained before trial aver, we have risks before train?
+P063	1	21
+P064	1	22
+P065	1	23
+#P067	1	24 #not in the table yet
