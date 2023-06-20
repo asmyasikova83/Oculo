@@ -15,6 +15,9 @@ plot_RT_Z_ANOVA.R - script for preprocessing and plotting Z-transformed
                 response time with ANOVA and 2 choice types (risk, postrisk)
                 analysis od normality of distributions is included.
 
+plot_RT_raw_repetitive_risks.R - script for analysis of triple risks (a chain of risks)
+plot_RT_Z_repetitive_risks.R
+
 LMEM_oculo_graph_group_by_choice.R - script for preprocessing and plotting Z-transformed
                 pupillometric data. Feedback cur in the model can be replaced with
                 feedback prev.
