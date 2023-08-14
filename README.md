@@ -30,4 +30,5 @@ plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statist
 plot_pupil_timecourse_kseniya_averaging_in_group.py - timecourses and t-statistics betw
                in group
 
-
+plot_RT_raw_eyetracker.R - log RT stat HP vs LP 
+plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losses 
