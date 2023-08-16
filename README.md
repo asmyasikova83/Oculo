@@ -30,5 +30,16 @@ plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statist
 plot_pupil_timecourse_kseniya_averaging_in_group.py - timecourses and t-statistics betw
                in group
 
+RT 
+
 plot_RT_raw_eyetracker.R - log RT stat HP vs LP 
-plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losses 
+plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losses
+
+proportion_risks_RT_slowing_corr.R - associations of LP share and diff btwn RT LP and RT HP
+
+General
+
+failed_count.R
+proportion_risks_gains_corr.R
+learning_trials.R
+repetitive_risks_stat.R  
