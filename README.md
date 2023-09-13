@@ -22,6 +22,19 @@ LMEM_oculo_graph_group_by_choice.R - script for preprocessing and plotting Z-tra
                 pupillometric data. Feedback cur in the model can be replaced with
                 feedback prev.
 
+LMEM_oculo_graph_group_cleaned.R -script for preprocessing and plotting Z-transformed
+                pupillometric data. Plots for the article on NT, AT. Plots in Rus 
+LMEM_oculo_graph_group_cleaned_rus.R -script for preprocessing and plotting Z-transformed
+                pupillometric data. Plots for the article on NT, AT. Plots in Rus 
+
+LMEM_oculo_graph_group_feedback_cleaned.R - script for preprocessing and plotting Z-transformed
+                pupillometric data. Choice type split by Feedback Prev. Plots for the article on Nt, AT
+LMEM_oculo_graph_group_feedback_cleaned_rus.R - script for preprocessing and plotting Z-transformed
+                pupillometric data. Choice type split by Feedback Prev. Plots in Rus
+
+LMEM_oculo_graph_group_cleaned_singleLP_repet_LP.R - script for preprocessing and plotting Z-transformed
+                pupillometric data. Contrasts of single and repetitive LP. Plots in Rus
+
 LMEM_oculo_traits.R - correlations between traits of character and pupil Z
 
 plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statistics betw 
@@ -34,6 +47,7 @@ RT
 
 plot_RT_raw_eyetracker.R - log RT stat HP vs LP 
 plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losses
+plot_RT_raw_eyetracker_positive.R - log RT stat HP vs LP with LP preceding gains
 
 proportion_risks_RT_slowing_corr.R - associations of LP share and diff btwn RT LP and RT HP
 
