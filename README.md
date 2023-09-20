@@ -42,6 +42,12 @@ plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statist
 
 plot_pupil_timecourse_kseniya_averaging_in_group.py - timecourses and t-statistics betw
                in group
+plot_pupil_timecourse_full_choice.py - plot full timecourses split by choice with tfce (or tstat)
+
+plot_pupil_timecourse_full_feedback.py - plot full timecourses split by feedback with tfce (or tstat)
+
+plot_pupil_timecourse_full_train.py -  plot full timecourses split by train with tfce (or tstat)
+autists_table.csv is very big, cannot upload it. libtfce has been uploaded. 
 
 RT 
 
