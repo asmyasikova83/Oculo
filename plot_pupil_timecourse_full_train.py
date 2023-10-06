@@ -94,7 +94,7 @@ def plot_stat_comparison(group, comp1, comp2, comp1_stderr, comp2_stderr, p_val,
 ###########################################################################
     
 
-with open('/home/asmyasnikova83/Oculo/tables/autists_table.csv', 'r') as inp, open('/net/server/data/Archive/prob_learn/asmyasnikova83/Pupil/edit.csv', 'w') as out:
+with open('/home/asmyasnikova83/Oculo/tables/normals_table.csv', 'r') as inp, open('/net/server/data/Archive/prob_learn/asmyasnikova83/Pupil/edit.csv', 'w') as out:
     writer = csv.writer(out)
     for row in csv.reader(inp):
         writer.writerow(row)
@@ -107,9 +107,9 @@ df = pd.read_csv('/net/server/data/Archive/prob_learn/asmyasnikova83/Pupil/edit.
 comp1 = 'trained'
 comp2 = 'not_trained'
 
-group = 'autists'
+group = 'normals'
 if group == 'normals':
-    subj_list = ['P001','P004', 'P019', 'P021', 'P022', 'P032', 'P034', 'P035', 'P039','P040', 'P044','P047','P048', 'P053',
+    subj_list = ['P067','P004', 'P019', 'P021', 'P022', 'P032', 'P034', 'P035', 'P039','P040', 'P044','P047','P048', 'P053',
         'P055', 'P058', 'P059', 'P060', 'P061', 'P063', 'P064', 'P065', 'P066']
 if group == 'autists':
     subj_list = ['P301', 'P304','P307', 'P312','P313','P314','P316','P318','P321','P322','P323','P324','P325','P326','P327',
