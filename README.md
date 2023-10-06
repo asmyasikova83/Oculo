@@ -74,4 +74,5 @@ General
 failed_count.R
 proportion_risks_gains_corr.R
 learning_trials.R
-repetitive_risks_stat.R  
+repetitive_risks_stat.R 
+transitions - estimate Win_Stay, Lose-Shift, not completed 

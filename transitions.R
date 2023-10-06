@@ -37,26 +37,15 @@ rt[trained == FALSE, train:='not_trained'][trained== TRUE, train:='trained']
 
 rt[prev_rew == 1, feedback_prev:='positive'][prev_rew == 0, feedback_prev:='negative']
 
-rt$transition_loss<- FALSE
-rt$transition_loss
-rt[feedback_prev=='negative' & prev_risk==F & risk==T]$transition_loss <- TRUE
+rt$lose_shift<- FALSE
+rt$lose_shift
+rt[feedback_prev=='negative' & risk != prev_risk]$lose_shift <- TRUE
 
-rt$transition_gain<- FALSE
-rt$transition_gain
-rt[feedback_prev=='positive' & prev_risk==F & risk==T]$transition_gain <- TRUE
+rt$win_stay<- FALSE
+rt$win_stay
+rt[feedback_prev=='positive' & prev_risk == risk]$win_stay <- TRUE
+rt$win_stay
 
-
-rt <- rt[train =='trained']
-
-rt[,`:=`(proportion_transition_loss=sum(transition_loss)/.N),
-   by=.(fname)]
-rt[,`:=`(proportion_transition_gain=sum(transition_gain)/.N),
-   by=.(fname)]
-
-rt[,`:=`(sN=.N),
-   by=.(fname)]
-
-rt$sN
 #subjects
 #p066<-p067, because we have no pupil data for p067
 normal_rt<- filter(rt, fname %in%c('P001','P004','P019','P021','P022','P034',
@@ -74,33 +63,14 @@ autists_rt<- filter(rt, fname %in% c('P301', 'P304','P307', 'P312','P313','P314'
 autists_rt$group<- "autists"
 
 df_rt<- rbind(autists_rt,normal_rt)
-       
 
-data_stat_subj = df_rt %>%
-  group_by(group) %>% summarise(mean_proportion_transition_loss=mean(proportion_transition_loss),
-                                mean_proportion_transition_gain=mean(proportion_transition_gain),
-                                sd_proportion_transition_loss=sd(proportion_transition_loss),
-                                sd_proportion_transition_gain=sd(proportion_transition_gain))
+q<- df_rt %>%
+  group_by(group, train, win_stay)%>%summarise(N = n())
 
-a_m <-data_stat_subj[1,2]/(data_stat_subj[1,2]+data_stat_subj[1,3])
-a_m <- 100*a_m
-a_m
-n_m<- data_stat_subj[2,2]/(data_stat_subj[2,2]+data_stat_subj[2,3])
-n_m <- 100*n_m
-n_m
-a_sd<-data_stat_subj[1,5]/(data_stat_subj[1,4]+data_stat_subj[1,5])
-a_sd <- 100*a_sd
-a_sd
-n_sd<-sqrt(((data_stat_subj[2,4])^2+(data_stat_subj[2,5])^2)/2)
-n_sd <- 100*n_sd
-n_sd
+q <- as.data.table(unique(q))
 
-#chi squared test for proportions
-transit = as.numeric(round(n_m))
-transit
-proportion = as.numeric(round(a_m))
-#proportion = 30%, proportion = 100%, against each other
-#binom.test(transit, N, 0.3)
-MAT = rbind(c(transit),c(proportion))
-#trained
-chisq.test(MAT, cor=F, sim=T, B = 10000)
+#compare proportions
+#transit <-35.1
+#proportion = 39.0
+#MAT = rbind(c(transit),c(proportion))
+#chisq.test(MAT, cor=F, sim=T, B = 10000)
