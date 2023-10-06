@@ -37,6 +37,11 @@ LMEM_oculo_graph_group_cleaned_singleLP_repet_LP.R - script for preprocessing an
 
 LMEM_oculo_traits.R - correlations between traits of character and pupil Z
 
+LMM_oculo_feedback_boxplot.R - boxplot diagrams representing Pupillary responses in choice type split
+by prev. feedback emmeans
+
+Pupil_diff_graph_correlation.R - correlate pupil size in HP: trained vs not_trained
+
 plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statistics betw 
                normals and autists
 
@@ -49,6 +54,8 @@ plot_pupil_timecourse_full_feedback.py - plot full timecourses split by feedback
 plot_pupil_timecourse_full_train.py -  plot full timecourses split by train with tfce (or tstat)
 autists_table.csv is very big, cannot upload it. libtfce has been uploaded. 
 
+
+
 RT 
 
 plot_RT_raw_eyetracker.R - log RT stat HP vs LP 
@@ -56,6 +63,11 @@ plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losse
 plot_RT_raw_eyetracker_positive.R - log RT stat HP vs LP with LP preceding gains
 
 proportion_risks_RT_slowing_corr.R - associations of LP share and diff btwn RT LP and RT HP
+
+LMM_oculo_feedback_boxplot.R - boxplot diagrams representing RT in choice type split be prev. feedback,
+emmeans
+
+RT_diff_graph_correlation.R - correlate RT in HP: trained vs not_trained
 
 General
 
