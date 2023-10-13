@@ -33,30 +33,26 @@ rt <- rt[block != 6]
 
 #percent of risk in not_trained
 
-rt[trained == FALSE, train:='not_trained'][trained== TRUE, train:='trained']
+#rt[trained == FALSE, train:='not_trained'][trained== TRUE, train:='trained']
 
-rt[risk == FALSE, norisk:=TRUE][risk== TRUE, norisk:=FALSE]
+rt[trained == FALSE & learning == FALSE & critical==FALSE, train:='not_trained'][trained== TRUE, train:='trained']
+rt <- rt[train %in% c('not_trained','trained')]
+unique(rt$train)
 
 rt[,`:=`(proportion_risk=sum(risk)/.N),
    by=.(fname,block)]
 
-rt[,`:=`(proportion_norisk=sum(norisk)/.N),
-   by=.(fname,block)]
-
-
 #repetitive LP
-rt$trial_type2 <- 'other'
-rt[prev_risk==1 & risk==1 & next_risk==1, trial_type2:= 'rLP']
+#rt$trial_type2 <- 'other'
+#rt[prev_risk==1 & risk==1 & next_risk==1, trial_type2:= 'rLP']
 #single LP
-rt[prev_risk==0 & risk==1 & next_risk==0, trial_type2:= 'LP']
-rt <- rt[trial_type2 %in% c('LP','rLP')]
+#rt[prev_risk==0 & risk==1 & next_risk==0, trial_type2:= 'LP']
+#rt <- rt[trial_type2 %in% c('LP','rLP')]
 
-#RT
-#rt[,RT_raw:=RT,by=fname]
-#rt[,RT_raw_sd:=sd(RT_raw),by=fname]
-#rt[,RT_flag:=abs(RT_raw)<3*RT_raw_sd]
-#flag <- 'RT_flag'
-#rt<- rt[rt[,get(flag)==T]]
+rt$trial_type2 <- 'other'
+rt[risk==1, trial_type2:= 'risk']
+rt[risk==0, trial_type2:= 'norisk']
+rt <- rt[trial_type2 %in% c('risk','norisk')]
 
 #subjects
 #p066<-p067, because we have no pupil data for p067
@@ -76,20 +72,20 @@ autists_rt$group<- "autists"
 
 df_rt<- rbind(autists_rt,normal_rt)
 
-unique(df_rt$train)
+unique(df_rt[train == 'not_trained']$fname)
 length(unique(df_rt$fname))
 
 q<- df_rt %>%
-  group_by(group, train, trial_type2)%>%summarise(N = n())
-#  group_by(train, group)%>%summarise(mean_proportion_risk=median(proportion_risk), total_risk=sum(risk),
-#                                     mean_proportion_norisk=median(proportion_norisk), total_norisk=sum(norisk)) #### число трайлов обученных и нет
-#  group_by(group, train, block)%>%summarise(mean_n =mean(n()))
+  #group_by(group, train, norisk)%>%summarise(N = n())
+   group_by(group, train, trial_type2)%>%summarise(N = n())
+
+   #group_by(train, group)%>%summarise(mean_proportion_risk=mean(proportion_risk)) #### число трайлов обученных и нет
 
 q <- as.data.table(unique(q))
 
 
 qq<- df_rt %>%
-  group_by(group,train, risk, norisk)%>%summarise(mean_rt=mean(RT), sd_rt=sd(RT))
+  group_by(group,train, trial_type2)%>%summarise(mean_rt=mean(RT), sd_rt=sd(RT))
 
 #ttest
 #df_rt <- df_rt[train== 'trained']

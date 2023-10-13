@@ -35,9 +35,9 @@ LMEM_oculo_graph_group_feedback_cleaned_rus.R - script for preprocessing and plo
 LMEM_oculo_graph_group_cleaned_singleLP_repet_LP.R - script for preprocessing and plotting Z-transformed
                 pupillometric data. Contrasts of single and repetitive LP. Plots in Rus
 
-LMEM_oculo_traits.R - correlations between traits of character and pupil Z
+LMEM_oculo_traits_fin.R - correlations between traits of character and pupil Z
 
-LMM_oculo_feedback_boxplot.R - boxplot diagrams representing Pupillary responses in choice type split
+LMM_oculo_feedback_boxplot.R - boxplot diagrams representing Pupillary responses in Group split
 by prev. feedback emmeans
 
 Pupil_diff_graph_correlation.R - correlate pupil size in HP: trained vs not_trained
@@ -62,9 +62,11 @@ plot_RT_raw_eyetracker.R - log RT stat HP vs LP
 plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losses
 plot_RT_raw_eyetracker_positive.R - log RT stat HP vs LP with LP preceding gains
 
+plot_RT_feedback_fin.R - log RT in HP and LP split by prev. fb, groups combined
+
 proportion_risks_RT_slowing_corr.R - associations of LP share and diff btwn RT LP and RT HP
 
-LMM_oculo_feedback_boxplot.R - boxplot diagrams representing RT in choice type split be prev. feedback,
+LMM_RT_feedback_boxplot.R - boxplot diagrams representing RT in choice type split be prev. feedback,
 emmeans
 
 RT_diff_graph_correlation.R - correlate RT in HP: trained vs not_trained
@@ -75,4 +77,7 @@ failed_count.R
 proportion_risks_gains_corr.R
 learning_trials.R
 repetitive_risks_stat.R 
-transitions - estimate Win_Stay, Lose-Shift, not completed 
+transitions - estimate Win_Stay, Lose-Shift, not completed
+plot_age_sex.R - plot demographics, non-verbal IQ test 
+
+ 

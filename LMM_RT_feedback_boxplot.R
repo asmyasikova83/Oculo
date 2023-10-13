@@ -1,8 +1,13 @@
 # LMM analysis separately on trained and not_trained or both.
 # Choose mode to operate the subset you want  
 
-#rm(list = ls())
 
+
+#rm(list = ls())
+#install.packages("emmeans")
+#install.packages("lmerTest")
+#install.packages("ggplot2")
+library(cowplot)
 library(reshape2)
 library(data.table)
 library(ggplot2)
@@ -11,6 +16,7 @@ library("ggpubr")
 library(emmeans)
 library(lmerTest)
 library(gridExtra)
+
 
 sterr <- function(x) sd(x)/sqrt(length(x))
 
