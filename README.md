@@ -63,6 +63,7 @@ plot_RT_raw_eyetracker_negative.R - log RT stat HP vs LP with LP preceding losse
 plot_RT_raw_eyetracker_positive.R - log RT stat HP vs LP with LP preceding gains
 
 plot_RT_feedback_fin.R - log RT in HP and LP split by prev. fb, groups combined
+plot_RT_LMM_fin.R - log RT for betw group analyses
 
 proportion_risks_RT_slowing_corr.R - associations of LP share and diff btwn RT LP and RT HP
 
