@@ -81,7 +81,11 @@ repetitive_risks_stat.R
 transitions - estimate Win_Stay, Lose-Shift, not completed
 plot_age_sex.R - plot demographics, non-verbal IQ test 
 
-preprocessing
+Preprocessing
+
+* use OS (C:) \Program Files\SR Research\edfconverter (https://www.sr-research.com/support/thread-7674.html)
+EDF to ASCII Conversion / EDF2ASC (GUI interface)
+to convert Eyetracker files into ASC
 
 pupil_preprocessing_full_timecourse_corrected.R - blink identification, learning and trial type identification
 merge_asc.R in deprecated - combines asc files into a table, redundant 
