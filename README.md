@@ -54,7 +54,9 @@ plot_pupil_timecourse_full_feedback.py - plot full timecourses split by feedback
 plot_pupil_timecourse_full_train.py -  plot full timecourses split by train with tfce (or tstat)
 autists_table.csv is very big, cannot upload it. libtfce has been uploaded. 
 
-
+################################################
+timecourse_permut_PERM_choice.R       -   timecourses with p-val permutations, fdr
+timecourse_permut_PERM_Tukey_choice.R -   timecourses with posthoc Tukey, p-val permutations, fdr
 
 RT 
 
