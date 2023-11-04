@@ -11,20 +11,20 @@ library("ggpubr")
 library(emmeans)
 library(lmerTest)
 library(dplyr)
-library(readxl)
-library(stringi)
+#install.packages('viridis')
+library(viridis)
 
 sterr <- function(x) sd(x)/sqrt(length(x))
-
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
-out_path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
+out_path <- paste0(path,'pics_articles/article_at_nt/')
 
 #"tables/resp_18042022.txt"
 #"tables/autists.txt"
 df1 <- fread(paste0(path,"norma.txt"))
 df2 <- fread(paste0(path,"autists.txt"))
-df_large <- rbind(df1,df2)
-
+#df_large <- rbind(df1,df2)
+df_large <- as.data.table(rbind(df1,df2))
+#df_large<- na.omit(df_large)
 
 #standardazitng fname
 df_large$fname <- gsub ("_1", "", df_large$fname)
@@ -39,6 +39,7 @@ int_end <- '2200'
 ncol_min <- grep(paste0('_', int_beg, '_'), colnames(df_large))[1]
 ncol_max <- grep(paste0('_', int_end, ''), colnames(df_large))[1]
 col <- c(colnames(df_large)[ncol_min:ncol_max])
+
 colname <- paste0('resp_',int_beg,'_',int_end)
 
 df_large[,(colname):=rowMeans(df_large[,.SD,.SDcol=col])]
@@ -47,7 +48,8 @@ df_large[, index := 1:.N, by=c('fname','block')]
 #2
 #RT filter (for all intervals)
 df_large <- df_large[RT>300 & RT<4000]
-df_large[prev_rew == 1, feedback_prev:='positive'][prev_rew == 0, feedback_prev:='negative']
+df_large  <- df_large[block!='6']
+df_large[prev_rew == 1, feedback_prev:='prev_rew'][prev_rew == 0, feedback_prev:='prev_lose']
 
 #Z for pupil
 
@@ -60,7 +62,6 @@ Zmeans <- df_filt_m[, mean(value), by=fname]
 setnames(Zmeans,'V1','Zmean_2')
 Zsds <- df_filt_m[, sd(value), by=fname]
 setnames(Zsds,'V1','Zsd_2')
-df_large[,RT_raw:=RT]
 
 df_large <- merge(df_large,Zmeans,by='fname',all.x = TRUE)
 df_large <- merge(df_large,Zsds,by='fname',all.x = TRUE)
@@ -70,7 +71,6 @@ cols <- colnames(df_large)[grep('resp_|V_|BL_|inter_trial',colnames(df_large))]
 for (j in cols) set(df_large, j = j, value = (df_large[[j]]-df_large$Zmean_2)/df_large$Zsd_2)
 
 df_large$trial_type4 <- df_large$trial_type
-
 df_large[prev_risk==0 & risk==1 & next_risk==0, trial_type4:= 'risk']
 df_large[prev_risk==0 & risk==0 & next_risk==0, trial_type4:= 'norisk']
 
@@ -78,10 +78,13 @@ df_large[prev_risk==0 & risk==0 & next_risk==0, trial_type4:= 'norisk']
 #3
 df_large <- df_large[trial_type!='final' & trial_type!='criterion' & !fname %in% c('P308','P309','P311')]
 
+pupil_sd <- df_large[blink==F][,sd(resp_1001_2200)]
+df_large[,resp_flag:=!blink & abs(resp_1001_2200)<3*pupil_sd]
+
 
 # load filtered dataset
 
-nt <- c('P001','P004', 'P019', 'P021', 'P022', 'P032', 'P034', 'P035', 'P039','P040', 'P044','P047','P048', 'P053',
+nt <- c('P001','P004','P019', 'P021', 'P022', 'P032', 'P034', 'P035', 'P039','P040', 'P044','P047','P048', 'P053',
         'P055', 'P058', 'P059', 'P060', 'P061', 'P063', 'P064', 'P065', 'P066')
 at <- c('P301', 'P304','P307', 'P312','P313','P314','P316','P318','P321','P322','P323','P324','P325','P326','P327',
         'P328','P329','P333', 'P334','P335','P338','P341', 'P342')
@@ -92,25 +95,33 @@ df_AT$group <- 'autists'
 df_large_group <- rbind(df_AT, df_NT)
 unique(df_large_group$fname)
 
-#trained
-df_large_group <- df_large_group[trained==FALSE, train:='not_trained']
-df_large_group <- df_large_group[trained==TRUE, train:='trained']
-
-#outliers
-pupil_sd <- df_large_group [blink==F][,sd(resp_1001_2200)]
-df_large_group [,resp_flag:=!blink & abs(resp_1001_2200)<3*pupil_sd]
-flag <- 'resp_flag'
-df_large_group <- df_large_group[df_large_group[,get(flag)==T]]
+#settings for train untrain
 df_large_group <- df_large_group[!is.na(resp_1001_2200)]
-#df_large <- df_large[block != 6]
+
+df_large_group[trained == FALSE, train:='not_trained'][trained== TRUE, train:='trained']
 
 df_large_group <- df_large_group[!is.na(train)]
 df_large_group$train<- as.factor(df_large_group$train)
-unique(df_large_group[train=='not_trained']$fname)
-################################LMM####################################################
+
+flag <- 'resp_flag'
+interval <- 'resp_1001_2200'
+df_large_group <- df_large_group[df_large_group[,get(flag)==T]]
+length(unique(df_large_group[group == 'autists' & train == 'not_trained']$fname))
+length(unique(df_large_group[group == 'normals' & train == 'not_trained']$fname))
+
+print(unique(df_large_group[group == 'autists' & train == 'trained']$fname))
 
 df_large_group <- df_large_group[trial_type4 %in% c('norisk','risk')]
+
+df_large_group <- df_large_group[group %in% c('normals')]
+#df_large_group <- df_large_group[trial_type4 %in% c('norisk')]
+df_large_group <- df_large_group[train %in% c('trained')]
+unique(df_large_group$trial_type4)
+unique(df_large_group$group)
+unique(df_large_group$train)
+################################LMM####################################################
+
 df_large_group <- as.data.table(df_large_group)
 
 
-write.csv(df_large_group,paste0(out_path, "pupil_table_for_tfce.csv"))
+write.csv(df_large_group,paste0(out_path, "pupil_table_normals_trained.csv"))
