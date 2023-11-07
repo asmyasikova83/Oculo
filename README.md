@@ -40,6 +40,10 @@ LMEM_oculo_traits_fin.R - correlations between traits of character and pupil Z
 LMM_oculo_feedback_boxplot.R - boxplot diagrams representing Pupillary responses in Group split
 by prev. feedback emmeans
 
+
+LMEM_oculo_graph_group_1500_2200.R - interval from peaked value (1500 ms) with separate analysis in no learning/after learning cond
+LMEM_oculo_graph_group_cur_feedback_1500_2200.R - interval from peaked value (1500 ms) with current fb in the LMM model
+
 Pupil_diff_graph_correlation.R - correlate pupil size in HP: trained vs not_trained
 
 plot_pupil_timecourse_kseniya_averaging_btw_group.py - timecourses and t-statistics betw 
