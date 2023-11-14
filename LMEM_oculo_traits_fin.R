@@ -2,7 +2,6 @@
 # Choose mode to operate the subset you want  
 
 #rm(list = ls())
-
 library(reshape2)
 library(data.table)
 library(ggplot2)
@@ -10,9 +9,10 @@ library(lme4)
 library("ggpubr")
 library(emmeans)
 library(lmerTest)
+library(readxl)
+library(tidyr)
 library(dplyr)
-#install.packages('viridis')
-library(viridis)
+library(stringi)
 
 sterr <- function(x) sd(x)/sqrt(length(x))
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
@@ -78,6 +78,7 @@ df_large[prev_risk==0 & risk==0 & next_risk==0, trial_type4:= 'norisk']
 #3
 df_large <- df_large[trial_type!='final' & trial_type!='criterion' & !fname %in% c('P308','P309','P311')]
 
+df_large <- df_large[blink==F]
 pupil_sd <- df_large[blink==F][,sd(resp_1001_2200)]
 df_large[,resp_flag:=!blink & abs(resp_1001_2200)<3*pupil_sd]
 
@@ -131,7 +132,7 @@ question <- as.data.table(question)
 question[, fname:=stri_extract_first_regex(question$fname,"[0-9]+")]
 
 modes1 <- 'trained'
-modes2 <- 'autists'
+modes2 <- 'normals'
 
 modes3 = 'norisk'
 
@@ -140,6 +141,7 @@ df_large_group <- df_large_group[train == as.character(modes1)]
 df_large_group <- df_large_group[group == as.character(modes2)]
 df_large_group <- df_large_group[trial_type4 == as.character(modes3)]
 unique(df_large_group$trial_type4)
+unique(df_large_group$train)
 subj_list1 <- unique(df_large_group$fname)
 subj_list1
 length(unique(subj_list1))
@@ -168,9 +170,10 @@ unique(combined$fname)
 
 cor.test(combined$Pupil_m999_2200, combined$"Intolerance_for_uncertanty") ### просто распечатываем корреляции
 
-title <- paste0(as.character(modes1),'_', as.character(modes2),'_', as.character(modes3),'_Intolerance_for_uncertanty')
+title <- paste0(as.character(modes1),'_', as.character(modes2),'_', as.character(modes3),'_IU')
 #title <-'Испытуемые с РАС после обучения: HP, Intolerance_of_uncertainty'
-title <- 'Correlation: ASD in HP after learning and IU '
+title <- 'NT after learning in LP and IU '
+title
 
 #Intolerance_for_uncertanty
 #Tolerance_for_uncertanty
@@ -178,13 +181,16 @@ title <- 'Correlation: ASD in HP after learning and IU '
 #Behavioral inhibition
 #Behavioral_activation
 
+combined <- combined[!is.na("Tolerance_for_uncertanty")]
+combined <- combined[!is.na("Intolerance_for_uncertanty")]
+
 g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200", 
                add = "reg.line", conf.int = TRUE, 
                cor.coef = TRUE, cor.method = "spearman",
-               xlab = title, ylab = 'Rel.pupil size 1000-2200 ms',
+               xlab = title, ylab = 'Pupil [Z] 1000-2200 ms',
                font.size = 2.5, 
                cor.coef.name = c("rho"),
-               cor.coeff.args = list(label.x = 50,label.y = 0.8, size = 12, label.sep = "\n"),
+               cor.coeff.args = list(label.x = 50,label.y = 0.7, size = 12, label.sep = "\n"),
                size = 4.7) 
 g
 
