@@ -7,4 +7,8 @@ with monetary rewards and losses
 quantity_eyetracker_teens.R - computing number and proportions of advantageous choices
 
 lose_shift_lose_stay.R - computing proportions of lose-stay and lose-shift behavioral patterns and
-                         contrasting them between adults and teenagers
+                         contrasting them between adults and teenager
+
+
+quantity_risks.R - shifts, stay, num risks, primary risks
+
