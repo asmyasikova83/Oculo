@@ -83,6 +83,8 @@ RT_diff_graph_correlation.R - correlate RT in HP: trained vs not_trained
 
 General
 
+general_stat_table1.R - stat for Table 1 in the article
+proportion_risks_fin.R - proportions of risks for article
 failed_count.R
 proportion_risks_gains_corr.R
 learning_trials.R
