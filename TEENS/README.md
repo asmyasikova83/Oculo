@@ -12,3 +12,6 @@ lose_shift_lose_stay.R - computing proportions of lose-stay and lose-shift behav
 
 quantity_risks.R - shifts, stay, num risks, primary risks
 
+quantity_RT_teens.R - LMM with logRT and choice types
+
+plot_RT_LMM_teens.R  - LMM with raw and log RT and rLPs, rHPs
