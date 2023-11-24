@@ -15,3 +15,5 @@ quantity_risks.R - shifts, stay, num risks, primary risks
 quantity_RT_teens.R - LMM with logRT and choice types
 
 plot_RT_LMM_teens.R  - LMM with raw and log RT and rLPs, rHPs
+
+all_choices.R - num of choices of all types with previous wins and losses, their log RT, raw RT
