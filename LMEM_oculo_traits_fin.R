@@ -16,7 +16,7 @@ library(stringi)
 
 sterr <- function(x) sd(x)/sqrt(length(x))
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
-out_path <- paste0(path,'pics_articles/article_at_nt/')
+out_path <- paste0(path,'presentations_pics_posters/article_at_nt/dec_prefin/')
 
 #"tables/resp_18042022.txt"
 #"tables/autists.txt"
@@ -132,13 +132,13 @@ question <- as.data.table(question)
 question[, fname:=stri_extract_first_regex(question$fname,"[0-9]+")]
 
 modes1 <- 'trained'
-modes2 <- 'normals'
+modes2 <- 'autists'
 
 modes3 = 'norisk'
 
 #modes3 <- ''
 df_large_group <- df_large_group[train == as.character(modes1)]
-df_large_group <- df_large_group[group == as.character(modes2)]
+#df_large_group <- df_large_group[group == as.character(modes2)]
 df_large_group <- df_large_group[trial_type4 == as.character(modes3)]
 unique(df_large_group$trial_type4)
 unique(df_large_group$train)
@@ -158,7 +158,7 @@ df_large_group$fname <- as.factor(gsub("P", "", df_large_group$fname))
 
 data_pupil = df_large_group %>%
   #group_by(fname, block, index) %>%
-  group_by(fname) %>%
+  group_by(fname, group) %>%
   summarize(Pupil_m999_2200 = mean(resp_1001_2200))
 
 ###########################
@@ -172,7 +172,7 @@ cor.test(combined$Pupil_m999_2200, combined$"Intolerance_for_uncertanty") ### п
 
 title <- paste0(as.character(modes1),'_', as.character(modes2),'_', as.character(modes3),'_IU')
 #title <-'Испытуемые с РАС после обучения: HP, Intolerance_of_uncertainty'
-title <- 'NT after learning in LP and IU '
+title <- 'NT and ASD after learning in HP and IU '
 title
 
 #Intolerance_for_uncertanty
@@ -184,16 +184,34 @@ title
 combined <- combined[!is.na("Tolerance_for_uncertanty")]
 combined <- combined[!is.na("Intolerance_for_uncertanty")]
 
-g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200", 
-               add = "reg.line", conf.int = TRUE, 
+#black and white, one group
+#g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200",
+#               #add = "reg.line", conf.int = TRUE, 
+#               cor.coef = TRUE, cor.method = "spearman",
+#               xlab = title, ylab = 'Pupil [Z] ',
+#               font.size = 2.5, 
+#               cor.coef.name = c("rho"),
+#               cor.coeff.args = list(label.x = 50,label.y = 0.7, size = 12, label.sep = "\n"),
+#               size = 10)
+
+#g <- g +
+#  geom_smooth(method = lm, linewidth = 2.3)
+#g
+#colour the groups, keep one reg line
+g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200",
+               color = 'group',
                cor.coef = TRUE, cor.method = "spearman",
-               xlab = title, ylab = 'Pupil [Z] 1000-2200 ms',
+               xlab = title, ylab = 'Pupil [Z] ',
                font.size = 2.5, 
                cor.coef.name = c("rho"),
                cor.coeff.args = list(label.x = 50,label.y = 0.7, size = 12, label.sep = "\n"),
-               size = 4.7) 
-g
+               size = 10)
+              
 
+g <- g +
+  geom_smooth(method = lm, linewidth = 2.3)
+g
+  
 p1 <- ggpar(g,
             #ylim = c(-0.35, 0.4),
             font.ytickslab = 40,
@@ -207,4 +225,4 @@ p1 <- ggpar(g,
 p1
 ################################LMM####################################################
 
-ggsave(filename = paste0(out_path, '_Pupil_IU_corr', '_Tukey','.png'), p1, width =  15, height =9)
+ggsave(filename = paste0(out_path, 'Both_HP_Pupil_IU_corr_colour', '_Tukey','.png'), p1, width =  15, height =9)
