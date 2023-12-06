@@ -66,7 +66,11 @@ length(unique(df_rt$fname))
 
 length(unique(df_rt[train=='not_trained']$fname))
 unique(df_rt[train=='not_trained']$fname)
-       
+
+data_stat_subj = df_rt %>%
+  group_by(group, train, block, fname) %>%
+  summarise(n = n())
+
 data_stat_subj = df_rt %>%
   group_by(group, train, block, fname) %>%
   summarise(n = n())
@@ -75,3 +79,8 @@ data_stat_mean = data_stat_subj %>%
   group_by(group, train) %>%
   summarise(mean = mean(n),
             sd = sd(n))
+data_stat_subj = as.data.table(data_stat_subj)
+nottrain_asd = data_stat_subj[group=='autists'][train=='not_trained']
+nottrain_nt = data_stat_subj[group=='normal'][train=='not_trained']
+
+t.test (nottrain_asd$n,nottrain_nt$n )
