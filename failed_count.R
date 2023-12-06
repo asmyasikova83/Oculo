@@ -49,6 +49,7 @@ lp_hp<-df3
 
 learn<- filter(lp_hp, learning_type == 'not_trained'|learning_type == 'trained')
 
+#check
 unique(learn[learning_type == 'not_trained']$fname)
 
 q<- learn %>%
@@ -60,10 +61,14 @@ q <- as.data.table(q)
 #count num of failed blocks
 
 data_stat_subj = learn %>%
-  group_by(group, learning_type, fname, block) %>%
+  group_by(group, learning_type, block, fname) %>%
   summarise(n=n())
 
 #count num of failed blocks
 data_stat_subj %>% group_by(learning_type, group,fname) %>% tally() %>%summarise(mean_block=mean(n),
                                                                                  sd_block=sd(n))
+data_stat_subj = as.data.table(data_stat_subj)
+nottrain_asd = data_stat_subj[group=='autists'][learning_type=='not_trained']
+nottrain_nt = data_stat_subj[group=='normal'][learning_type=='not_trained']
 
+t.test (nottrain_asd$n,nottrain_nt$n )
