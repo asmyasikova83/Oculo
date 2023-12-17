@@ -136,15 +136,10 @@ modes2 <- 'autists'
 
 modes3 = 'norisk'
 
-#modes3 <- ''
+#both groups
 df_large_group <- df_large_group[train == as.character(modes1)]
 #df_large_group <- df_large_group[group == as.character(modes2)]
 df_large_group <- df_large_group[trial_type4 == as.character(modes3)]
-unique(df_large_group$trial_type4)
-unique(df_large_group$train)
-subj_list1 <- unique(df_large_group$fname)
-subj_list1
-length(unique(subj_list1))
 
 subj_list1 <- df_large_group$fname <- gsub ("P", "", df_large_group$fname)
 
@@ -184,22 +179,10 @@ title
 combined <- combined[!is.na("Tolerance_for_uncertanty")]
 combined <- combined[!is.na("Intolerance_for_uncertanty")]
 
-#black and white, one group
-#g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200",
-#               #add = "reg.line", conf.int = TRUE, 
-#               cor.coef = TRUE, cor.method = "spearman",
-#               xlab = title, ylab = 'Pupil [Z] ',
-#               font.size = 2.5, 
-#               cor.coef.name = c("rho"),
-#               cor.coeff.args = list(label.x = 50,label.y = 0.7, size = 12, label.sep = "\n"),
-#               size = 10)
-
-#g <- g +
-#  geom_smooth(method = lm, linewidth = 2.3)
-#g
 #colour the groups, keep one reg line
 g <- ggscatter(combined, x = "Intolerance_for_uncertanty", y = "Pupil_m999_2200",
                color = 'group',
+               palette =c('purple','lightgreen'),
                cor.coef = TRUE, cor.method = "spearman",
                xlab = title, ylab = 'Pupil [Z] ',
                font.size = 2.5, 
@@ -214,15 +197,16 @@ g
   
 p1 <- ggpar(g,
             #ylim = c(-0.35, 0.4),
-            font.ytickslab = 40,
-            font.xtickslab = 37,
-            font.main = 25,
-            font.submain = 25,
-            font.x = 40,
-            font.y = 40,
+            font.ytickslab = 50,
+            font.xtickslab = 47,
+            font.main = 35,
+            font.submain = 35,
+            font.x = 50,
+            font.y = 50,
 )
 
 p1
+
 ################################LMM####################################################
 
 ggsave(filename = paste0(out_path, 'Both_HP_Pupil_IU_corr_colour', '_Tukey','.png'), p1, width =  15, height =9)

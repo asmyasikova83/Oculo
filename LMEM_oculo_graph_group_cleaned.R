@@ -11,11 +11,10 @@ library("ggpubr")
 library(emmeans)
 library(lmerTest)
 library(dplyr)
-#install.packages('viridis')
-library(viridis)
 
 sterr <- function(x) sd(x)/sqrt(length(x))
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
+out_path <- paste0(path,'presentations_pics_posters/article_at_nt/dec_prefin/')
 
 #"tables/resp_18042022.txt"
 #"tables/autists.txt"
@@ -47,7 +46,12 @@ df_large[, index := 1:.N, by=c('fname','block')]
 #2
 #RT filter (for all intervals)
 df_large <- df_large[RT>300 & RT<4000]
+df_large  <- df_large[block!='6']
 df_large[prev_rew == 1, feedback_prev:='prev_rew'][prev_rew == 0, feedback_prev:='prev_lose']
+
+
+#q_trials <- df_large %>%
+#  group_by(fname)%>%summarise(N=n()) #### num of risks
 
 #Z for pupil
 
@@ -110,6 +114,7 @@ length(unique(df_large_group[group == 'normals' & train == 'not_trained']$fname)
 print(unique(df_large_group[group == 'autists' & train == 'trained']$fname))
 
 df_large_group <- df_large_group[trial_type4 %in% c('norisk','risk')]
+
 ################################LMM##########################
 
 m <- lmer(resp_1001_2200 ~ trial_type4*group*feedback_prev*train + (1|fname) + (1|block),df_large_group)
@@ -136,7 +141,7 @@ output2 <- as.data.table(Tuk$emmeans)
 Tuk_stat[p.value<0.001, stars:='***']
 Tuk_stat[p.value<0.01 & p.value>0.001 , stars:='**']
 Tuk_stat[p.value<0.05 & p.value>0.01 , stars:='*']
-#Tuk_stat[p.value>0.05 & p.value<0.1 , stars:='#']
+Tuk_stat[p.value>0.05 & p.value<0.1 , stars:='#']
 
 Tuk1 <- Tuk_stat
 
@@ -156,8 +161,8 @@ if (n>1){
 Tuk1[p.value<0.001, stars:='***']
 Tuk1[p.value<0.01 & p.value>0.001 , stars:='**']
 Tuk1[p.value<0.05 & p.value>0.01 , stars:='*']
-#Tuk1[p.value>0.05 & p.value<0.1 , stars:='#']
-Tuk1[,y.position:=y.position-0.1]
+Tuk1[p.value>0.05 & p.value<0.1 , stars:='#']
+Tuk1[,y.position:=y.position+0.1]
 Tuk1
 
 signif <- Tuk1
@@ -177,7 +182,8 @@ setnames(y_values_lose,'V1','y_values_lose')
 
 y_values <- merge(y_values_lose,y_values_rew,by='trial_type4')
 y_values <- merge(y_values,sequence,by='trial_type4')
-y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type4]
+#y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type4]
+y_values[,y_max:=y_values_lose,by=trial_type4]
 y_values <- merge(y_values,signif,by='trial_type4')
 
 
@@ -198,30 +204,32 @@ p <-ggline(df_large_group, x = 'trial_type4', y = 'resp_1001_2200',
                      #palette = c("darkgreen","blue"),
                      position=position_dodge(0.15),
                      order=c('norisk','risk'),
-                     ylab = 'Relative pupil area (resp_1001_2200)', xlab = 'Trial_type',
-                     size = 2.7
+                     ylab = 'Pupil [Z]', xlab = 'Trial_type',
+                     size = 4.7,
+                     font.label = list(size = 26, color = "black")
+                     
     )+
 
-  scale_x_discrete(name='autists', labels = c("HP", 'LP'))+
-  
-  geom_signif(y_position=c(y_values$y_max+0.2),
+  scale_x_discrete(name='ASD', labels = c("HP", 'LP'))+
+  scale_color_discrete(name = "Learning", labels = c("no learning", "after learning"))+
+  geom_signif(y_position=c(y_values$y_max+.19),
               xmin=c(y_values$number-0.075), xmax=c(y_values$number+0.075),
               annotation=c(Tuk_stat$stars), 
-              tip_length=0.001,textsize = 10,vjust = 0.4)+
+              tip_length=0.001,textsize = 10,vjust = 0.4)#+
 
-  geom_hline(yintercept=-0.0, linetype='dashed', col = 'black', size = 1) #+
+  #geom_hline(yintercept=-0.0, linetype='dashed', col = 'black', size = 1) #+
   #geom_errorbar(aes(x=trial_type4,ymin=emmean-SE,ymax=emmean+SE,color=train, width=0.35))#+
   #geom_errorbar(aes(x=trial_type4,ymin=lower.CL,ymax=upper.CL,color=trained_edited, width=0.35)) +
   #stat_pvalue_manual(Tuk_stat, label = 'stars', size = 7, tip.length = 0.001)
 
-p1 <- ggpar(p,
-            ylim = c(-0.35, 0.4),
-            font.ytickslab = 30,
-            font.xtickslab = 27,
-            font.main = 25,
-            font.submain = 25,
-            font.x = 27,
-            font.y = 20,
-)
 
+p1<- ggpar(p,
+                    ylim = c(-0.35, 0.35),
+                    font.ytickslab = 30,
+                    font.xtickslab = 27,
+                    font.main = 25,
+                    font.submain = 25,
+                    font.x = 27,
+                    font.y = 27)
 p1
+ggsave(filename = paste0(out_path, 'ASD','_Pupil_before_after', '_Tukey','.png'), p1, width =  5, height = 5)

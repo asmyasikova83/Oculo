@@ -19,7 +19,7 @@ library(readr)
 library(viridis)
 
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
-out_path <- paste0(path,'pics_articles/article_at_nt/')
+out_path <- paste0(path,'presentations_pics_posters/article_at_nt/dec_prefin/')
 
 "tables/resp_18042022.txt"
 #"tables/autists.txt"
@@ -98,7 +98,7 @@ unique(df_large_group$trial_type)
 unique(df_large_group$train)
 
 modes1 = 'trained vs untrained'
-  
+
 if (modes1 != 'trained vs untrained'){
   #df_large_group <- df_large_group[train == modes[t1]]
   #unique(df_large_group$fname)
@@ -146,7 +146,7 @@ if (FALSE){
   if (modes1== 'trained vs untrained'){
     Tuk <- data.table(summary(emmeans(m2, pairwise ~ feedback_prev|trial_type, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
     #Tuk <- data.table(summary(emmeans(a, pairwise ~ trial_type4|train|group, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
-   }
+  }
   if (modes1 != 'trained vs untrained'){
     Tuk <- data.table(summary(emmeans(m2, pairwise ~ trial_type4|train|group, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
     #Tuk <- data.table(summary(emmeans(a, pairwise ~ trial_type4|train|group, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
@@ -167,14 +167,14 @@ if (TRUE){
     #Tuk <- data.table(summary(emmeans(m, pairwise ~ feedback_prev|trial_type4|group, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
     Tuk <- data.table(summary(emmeans(m, pairwise ~ train|trial_type4|group, adjust = 'tukey',lmer.df = "satterthwaite",lmerTest.limit=8000))$contrasts)
     
-    }
+  }
 }
 
 Tuk
 
 Tuk <- Tuk[, group1:=gsub(' -.*', '', contrast)][, group2:=gsub('.*- ', '', contrast)]
 Tuk <- Tuk[p.value<0.1, p_significant:=format(p.value, digits = 3)]
-  
+
 n <- Tuk[!is.na(p_significant), .N]
 thr <- max(df_large_group[, mean(get(interval)), by=trial_type]$V1) #
 
@@ -183,7 +183,7 @@ if (n>1){
 } else {
   Tuk <- Tuk[!is.na(p_significant), y.position := thr+0.16]
 }
-  
+
 Tuk[p.value<0.001, stars:='***']
 Tuk[p.value<0.01 & p.value>0.001 , stars:='**']
 Tuk[p.value<0.05 & p.value>0.01 , stars:='*']
@@ -200,157 +200,155 @@ feedback_prev_combined = FALSE
 # plot Tukey and save table
 
 Tuk
-                          
+
 if (choice_type == TRUE){
-    modes2 = 'normals'
-    modes3 = 'not_trained'
-    unique(df_large_group$trial_type)
-    Tuk
-    dff_trained <- df_large_group[train == as.character(modes3)][group == as.character(modes2)]
-    Tuk1 <- Tuk[train == as.character(modes3)][group == as.character(modes2)]
-    Tuk1
-    modes2 = 'Neurotypical'
-    modes3 = 'no learning'
-    title <- paste0(as.character(modes2),':',as.character(modes3))
-    interval
-    unique(dff_trained$trial_type)
-    #plot
-    p <-ggline(dff_trained, 'trial_type', interval,
-               add = c("mean_se"),
-               order = c("norisk", "risk"),
-               ylab = int_name, xlab = "Choice type",
-               size = 1.5, 
-               point.size = 1.8,
-               font.label = list(size = 16, color = "black"))+
-      scale_x_discrete(name=title, labels = c("HP", 'LP'))
-    p <- p + stat_pvalue_manual(Tuk1, label = 'stars', size = 12,tip.length = 0.001,bracket.size = 1.2)
-    p
-   
+  modes2 = 'normals'
+  modes3 = 'not_trained'
+  unique(df_large_group$trial_type)
+  Tuk
+  dff_trained <- df_large_group[train == as.character(modes3)][group == as.character(modes2)]
+  Tuk1 <- Tuk[train == as.character(modes3)][group == as.character(modes2)]
+  Tuk1
+  modes2 = 'Neurotypical'
+  modes3 = 'no learning'
+  title <- paste0(as.character(modes2),':',as.character(modes3))
+  interval
+  unique(dff_trained$trial_type)
+  #plot
+  p <-ggline(dff_trained, 'trial_type', interval,
+             add = c("mean_se"),
+             order = c("norisk", "risk"),
+             ylab = int_name, xlab = "Choice type",
+             size = 1.5, 
+             point.size = 1.8,
+             font.label = list(size = 16, color = "black"))+
+    scale_x_discrete(name=title, labels = c("HP", 'LP'))
+  p <- p + stat_pvalue_manual(Tuk1, label = 'stars', size = 12,tip.length = 0.001,bracket.size = 1.2)
+  p
+  
 }
 
 if (choice_type_group == TRUE){
-    #by choice type by train both groups
-    modes2 = 'normals'
-    dff_trained <- df_large_group[group == as.character(modes2)]
-    
-    Tuk1 <- Tuk[group == as.character(modes2)]
-    title <- 'Neurotypical: before and after learning'
-    #plot
-    
-    #signif <- Tuk
-    
-    #plot settings
-    sequence <-data.table(trial_type=c("norisk","risk"),number=c(1,2)) 
-    
-    y_values_rew <- dff_trained[train == 'trained',
-                                mean(get('RT_log_raw')),by='trial_type']
-    setnames(y_values_rew,'V1','y_values_rew')
-    
-    y_values_lose <- dff_trained[train  == 'not_trained',
-                                 mean(get('RT_log_raw')),by='trial_type']
-    setnames(y_values_lose,'V1','y_values_lose')
-    
-    y_values <- merge(y_values_lose,y_values_rew,by='trial_type')
-    y_values <- merge(y_values,sequence,by='trial_type')
-    y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type]
-    y_values <- merge(y_values,signif,by='trial_type')
-    
-    y_values <- y_values[group == as.character(modes[t2])]
-    title <- 'Neurotypical: no and after learning'
-    p <-ggline(dff_trained, 'trial_type', interval,
-               color = 'train',
-               add = c("mean_se"),
-               #palette = c('magenta','orange'),
-               palette = c('green','red'),
-               order = c("norisk","risk"),
-               ylab = int_name, xlab = title,
-               size = 1.5, 
-               point.size = 1.8,
-               font.label = list(size = 26, color = "black"),
-               font.legend = c(20, "plain", "black"))+
-      #scale_x_discrete(labels = c("No learning", 'After learning'))+
-      scale_x_discrete(name=title, labels = c("HP", 'LP'))+
-      scale_color_discrete(name = "Learning", labels = c("no learning", "after learning"))+
-      geom_signif(y_position=c(y_values$y_max+0.1),
-                  xmin=c(y_values$number-0.075), xmax=c(y_values$number+0.075),
-                  annotation=c(Tuk1$stars), 
-                  tip_length=0.001,textsize = 7,vjust = 0.4)
-    p
-  }
+  #by choice type by train both groups
+  modes2 = 'autists'
+  dff_trained <- df_large_group[group == as.character(modes2)]
+  
+  Tuk1 <- Tuk[group == as.character(modes2)]
+  title <- 'Neurotypical: before and after learning'
+  #plot
+  
+  #signif <- Tuk
+  
+  #plot settings
+  sequence <-data.table(trial_type=c("norisk","risk"),number=c(1,2)) 
+  
+  y_values_rew <- dff_trained[train == 'trained',
+                              mean(get('RT_log_raw')),by='trial_type']
+  setnames(y_values_rew,'V1','y_values_rew')
+  
+  y_values_lose <- dff_trained[train  == 'not_trained',
+                               mean(get('RT_log_raw')),by='trial_type']
+  setnames(y_values_lose,'V1','y_values_lose')
+  
+  y_values <- merge(y_values_lose,y_values_rew,by='trial_type')
+  y_values <- merge(y_values,sequence,by='trial_type')
+  y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type]
+  y_values <- merge(y_values,signif,by='trial_type')
+  
+  y_values <- y_values[group == as.character(modes[t2])]
+  title <- 'ASD'
+  p <-ggline(dff_trained, 'trial_type', interval,
+             color = 'train',
+             add = c("mean_se"),
+             #palette = c('magenta','orange'),
+             palette = c('green','red'),
+             order = c("norisk","risk"),
+             ylab = int_name, xlab = title,
+             size = 4.7, 
+             point.size = 1.8,
+             font.label = list(size = 26, color = "black"),
+             font.legend = c(20, "plain", "black"))+
+    #scale_x_discrete(labels = c("No learning", 'After learning'))+
+    scale_x_discrete(name=title, labels = c("HP", 'LP'))+
+    scale_color_discrete(name = "Learning", labels = c("no learning", "after learning"))+
+    geom_signif(y_position=c(y_values$y_max+0.1),
+                xmin=c(y_values$number-0.075), xmax=c(y_values$number+0.075),
+                annotation=c(Tuk1$stars), 
+                tip_length=0.001,textsize = 7,vjust = 0.4)
+  p
+}
 
 
 if (feedback_prev == TRUE){
-    #by feedback in choice type by train
-    #modes1='trained'
-    #modes2='normals'
-    #modes1
-    #modes2
-    #dff_trained <- df_large_group[train == as.character(modes1)][group == as.character(modes2)]
-    dff_trained <- df_large_group
-    #Tuk1 <- Tuk[train == as.character(modes[t1])][group == as.character(modes[t2])]
-    #title <- paste0(as.character(modes[t1]), as.character(modes[t2]),'by feedback_prev')
-    
-    #if in trained/untrained separately
-    #Tuk1 <- Tuk[train == as.character(modes1)][group == as.character(modes2)]
-    Tuk1 <- Tuk
-
-    #plot
-    #signif <- Tuk
-    
-    #plot settings
-    sequence <-data.table(trial_type=c("norisk","risk"),number=c(1,2)) 
-    
-    y_values_rew <- dff_trained[feedback_prev == 'positive',
-                                mean(get(interval)),by='trial_type']
-    setnames(y_values_rew,'V1','y_values_rew')
-    
-    y_values_lose <- dff_trained[feedback_prev  == 'negative',
-                                 mean(get(interval)),by='trial_type']
-    setnames(y_values_lose,'V1','y_values_lose')
-    
-    y_values <- merge(y_values_lose,y_values_rew,by='trial_type')
-    y_values <- merge(y_values,sequence,by='trial_type')
-    y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type]
-    y_values <- merge(y_values,signif,by='trial_type')
-    
-    #y_values <- y_values[train == as.character(modes1)][group == as.character(modes2)]
-    #y_values <- y_values[group == as.character(modes[t2])]
-    y_values
-    #title <- paste0(as.character(modes1), '_', as.character(modes2),'')
-    title <- ''
-    p <-ggline(dff_trained, 'trial_type', interval,
-               color = 'feedback_prev',
-               add = c("mean_se"),
-               #palette = c('green','red'),
-               order = c("norisk","risk"),
-               ylab = 'log10(RT)', xlab = "Choice type",
-               size = 2.5, 
-               point.size = 1.8,
-               font.label = list(size = 800, color = "black"))+
-      scale_x_discrete(name=title, labels = c("HP", 'LP'))+
-      scale_color_discrete(name = "Previous feedback", labels = c("Loss", "Gain"))+
-      geom_signif(y_position=c(y_values$y_max+0.1),
-                  xmin=c(y_values$number-0.075), xmax=c(y_values$number+0.075),
-                  annotation=c(Tuk1$stars), 
-                  tip_length=0.001,textsize = 7,vjust = 0.4)
-    p
+  #by feedback in choice type by train
+  #modes1='trained'
+  #modes2='normals'
+  #modes1
+  #modes2
+  #dff_trained <- df_large_group[train == as.character(modes1)][group == as.character(modes2)]
+  dff_trained <- df_large_group
+  #Tuk1 <- Tuk[train == as.character(modes[t1])][group == as.character(modes[t2])]
+  #title <- paste0(as.character(modes[t1]), as.character(modes[t2]),'by feedback_prev')
+  
+  #if in trained/untrained separately
+  #Tuk1 <- Tuk[train == as.character(modes1)][group == as.character(modes2)]
+  Tuk1 <- Tuk
+  
+  #plot
+  #signif <- Tuk
+  
+  #plot settings
+  sequence <-data.table(trial_type=c("norisk","risk"),number=c(1,2)) 
+  
+  y_values_rew <- dff_trained[feedback_prev == 'positive',
+                              mean(get(interval)),by='trial_type']
+  setnames(y_values_rew,'V1','y_values_rew')
+  
+  y_values_lose <- dff_trained[feedback_prev  == 'negative',
+                               mean(get(interval)),by='trial_type']
+  setnames(y_values_lose,'V1','y_values_lose')
+  
+  y_values <- merge(y_values_lose,y_values_rew,by='trial_type')
+  y_values <- merge(y_values,sequence,by='trial_type')
+  y_values[,y_max:=max(y_values_lose,y_values_rew),by=trial_type]
+  y_values <- merge(y_values,signif,by='trial_type')
+  
+  #y_values <- y_values[train == as.character(modes1)][group == as.character(modes2)]
+  #y_values <- y_values[group == as.character(modes[t2])]
+  y_values
+  #title <- paste0(as.character(modes1), '_', as.character(modes2),'')
+  title <- ''
+  p <-ggline(dff_trained, 'trial_type', interval,
+             color = 'feedback_prev',
+             add = c("mean_se"),
+             #palette = c('green','red'),
+             order = c("norisk","risk"),
+             ylab = 'log10(RT)', xlab = "Choice type",
+             size = 4.7, 
+             point.size = 1.8,
+             font.label = list(size = 800, color = "black"))+
+    scale_x_discrete(name=title, labels = c("HP", 'LP'))+
+    scale_color_discrete(name = "Previous feedback", labels = c("Loss", "Gain"))+
+    geom_signif(y_position=c(y_values$y_max),
+                xmin=c(y_values$number-0.075), xmax=c(y_values$number+0.075),
+                annotation=c(Tuk1$stars), 
+                tip_length=0.001,textsize = 7,vjust = 0.4)
+  p
 }
 
-p1 <- ggpar(p,
-      #ylim = c(-0.4,0.6),
-      ylim = c(2.9,3.3),
-      font.ytickslab = 30,
-      font.xtickslab = 27,
-      font.main = 25,
-      font.submain = 25,
-      font.x = 27,
-      font.y = 20,
-      
-)
+
+p1<- ggpar(p,
+                    #ylim = c(2.8, 3.2),
+                    font.ytickslab = 30,
+                    font.xtickslab = 27,
+                    font.main = 25,
+                    font.submain = 25,
+                    font.x = 27,
+                    font.y = 27)
 p1
 out_path
 #filename = paste0(out_path, modes2,'_',modes3,'_', interval,'_Tukey','.png')
 #filename
 #ggsave(filename = paste0(out_path, modes2,'_',modes3,'_', interval,'_Tukey','.png'), p1, width =  6, height = 6)
-#ggsave(filename = paste0(out_path, modes2,'_RT_log_before_after', '_Tukey','.png'), p1, width =  7, height = 6)
-ggsave(filename = paste0(out_path, '_RT_both_groups', '_Tukey','.png'), p1, width =  5, height = 4)
+ggsave(filename = paste0(out_path, modes2,'_RT_log_before_after', '_Tukey','.png'), p1, width =  5, height = 5)
+#ggsave(filename = paste0(out_path, '_RT_both_groups', '_Tukey','.png'), p1, width =  5, height = 4)
