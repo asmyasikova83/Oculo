@@ -1,5 +1,6 @@
 library(data.table)
 library(ggplot2)
+library(dplyr)
 
 #rm(list = ls())
 path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
@@ -10,14 +11,13 @@ path <- "C:/Users/trosh/OneDrive/jobs_Miasnikova/Oculo/"
 normal <- fread(paste0(path,"norma.txt"))
 autists <- fread(paste0(path,"autists.txt"))
 rt <- as.data.table(rbind(autists,normal))
-#rt<- na.omit(rt)
 
 #rename
 rt$fname <- gsub('_1','',rt$fname)
 rt$fname <- gsub('^p','P',rt$fname)
 
 rt <- rt[grep('P[0-9]',rt$fname)]
-rt<- rt[!(rt$RT< 300 | rt$RT> 4000),]
+#rt<- rt[!(rt$RT< 300 | rt$RT> 4000),]
 rt <- rt[block != 6]
 
 #subjects
@@ -43,32 +43,47 @@ df3 <-df_rt
 #failed blocks trained==F & learning==F & critical==F
 df3$learning_type <- 'unused'
 df3[trained==F & learning==F & critical==F ]$learning_type <- 'not_trained'
-df3[trained==T & learning==F & critical==F]$learning_type <- 'trained'
+#df3[trained==F]$learning_type <- 'not_trained'
+df3[trained==T]$learning_type <- 'trained'
 
 lp_hp<-df3
 
+#learn<- filter(lp_hp, learning_type == 'not_trained'|learning_type == 'trained')
+
+#num of blocks descriptive
 learn<- filter(lp_hp, learning_type == 'not_trained'|learning_type == 'trained')
-
-#check
-unique(learn[learning_type == 'not_trained']$fname)
-
-q<- learn %>%
-  #group_by(fname,group,trial_type, learning_type)%>%summarise(n=n()) #### число трайлов обученных и нет
-  group_by(group, learning_type)%>%summarise(n=n())
-
-q <- as.data.table(q)
-
-#count num of failed blocks
-
 data_stat_subj = learn %>%
   group_by(group, learning_type, block, fname) %>%
   summarise(n=n())
 
 #count num of failed blocks
-data_stat_subj %>% group_by(learning_type, group,fname) %>% tally() %>%summarise(mean_block=mean(n),
-                                                                                 sd_block=sd(n))
+data_stat_subj %>% group_by(learning_type, fname) %>% tally() %>%summarise(mean_block=mean(n),
+                                                                            sd_block=sd(n))
 data_stat_subj = as.data.table(data_stat_subj)
-nottrain_asd = data_stat_subj[group=='autists'][learning_type=='not_trained']
-nottrain_nt = data_stat_subj[group=='normal'][learning_type=='not_trained']
 
-t.test (nottrain_asd$n,nottrain_nt$n )
+
+#nottrain_asd = data_stat_subj[group=='autists'][learning_type=='not_trained']
+#nottrain_nt = data_stat_subj[group=='normal'][learning_type=='not_trained']
+
+#t.test (nottrain_asd$n,nottrain_nt$n )
+
+#Chi for failed
+learn<- filter(lp_hp, learning_type == 'not_trained')
+
+#check
+unique(learn[learning_type == 'not_trained']$fname)
+q_failed_blocks<- learn %>%
+  group_by(fname, group,  learning_type)%>%summarise(N=n(), blocks = N/40)
+
+q_failed_blocks <- as.data.table(q_failed_blocks)
+
+ntblocks = sum(as.numeric(q_failed_blocks[group=='normal']$blocks))
+asdblocks = sum(as.numeric(q_failed_blocks[group=='autists']$blocks))
+asdN = nrow(q_failed_blocks[group=='autists'])
+ntN = nrow(q_failed_blocks[group=='normal'])
+
+MAT =rbind(c(ntblocks, asdblocks), c(ntN, asdN))
+
+#Chi with permutations
+chisq.test(MAT, cor=F, sim=T, B = 10000)
+chisq.test(MAT)
